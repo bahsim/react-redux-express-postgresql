@@ -1,87 +1,65 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { createMuiTheme, MuiThemeProvider, withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import SupportIcon from '@material-ui/icons/ContactSupport';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#0093e7',
-    },
-    secondary: {
-      main: '#ffe38d',
-    },
-  },
-});
+import { withStyles } from '@material-ui/core/styles'
 
-const styles = {
-  root: {
-    flexGrow: 1
-  },
-  flex: {
-    flexGrow: 1,
-  },
+import Paper from '@material-ui/core/Paper'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
+import Grid from '@material-ui/core/Grid'
+
+const styles = theme => ({
   formControl: {
     margin: theme.spacing.unit,
     minWidth: '100%',
   },
-  button: {
-		marginTop: 		'2%',
-		marginBottom:	'1%',
-  },
-};
+})
 
-
-const FuncPanelCurrent = (props) => {
-	const styleLabel = {
-		fontSize:		'14px',
-		fontWeight:	700,
-	};
-  const { classes } = props;
-  return (
-		<MuiThemeProvider theme={theme}>
-			<div className={classes.root}>
-				<Paper className={classes.root} elevation={8}>
-					<Grid container spacing={0}>
-						<Grid item xs={2}></Grid>
-						<Grid item xs={5}>
-							<FormControl className={classes.formControl}>
-								<InputLabel htmlFor="record-status">
-									{"Автор"}
-								</InputLabel>
-								<Select
-									value={props.filterAuthor}
-									onChange={(event) => props.setFilterAuthor(event.target.value)}
-									inputProps={{
-										name: 'author',
-										id: 'record-status',
-									}}
-								>
-									<MenuItem value={''}>{'Все'}</MenuItem>
-									{props.authors.map((item) => {
-										return (
-											<MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-										)
-									})}
-								</Select>
-							</FormControl>
-						</Grid>
-					</Grid>
-				</Paper>
-			</div>
-		</MuiThemeProvider>
+const FuncPanelRegistryFree = (props) => {
+  const { classes, filterAuthor, setFilterAuthor, authors } = props
+  
+	return (
+		<Paper elevation={8}>
+			<Grid container spacing={0}>
+				<Grid item xs={2}></Grid>
+				<Grid item xs={5}>
+					<FormControl className={classes.formControl}>
+						<InputLabel htmlFor="filter-author">
+							{"Автор"}
+						</InputLabel>
+						<Select
+							value={filterAuthor}
+							onChange={(event) => setFilterAuthor(event.target.value)}
+							inputProps={{
+								name: 'author',
+								id: 'filter-author',
+							}}
+						>
+							<MenuItem value={''}>
+								{'Все'}
+							</MenuItem>
+							{authors.map((item) => {
+								return (
+									<MenuItem 
+										key={item.id} 
+										value={item.id}
+									>
+										{item.name}
+									</MenuItem>
+								)
+							})}
+						</Select>
+					</FormControl>
+				</Grid>
+			</Grid>
+		</Paper>
   );
 }
 
-FuncPanelCurrent.propTypes = {
+FuncPanelRegistryFree.propTypes = {
   classes: PropTypes.object.isRequired,
-};
+}
 
-export default withStyles(styles)(FuncPanelCurrent);
+export default withStyles(styles)(FuncPanelRegistryFree)

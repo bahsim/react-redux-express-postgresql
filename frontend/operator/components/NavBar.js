@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { createMuiTheme, MuiThemeProvider, withStyles } from '@material-ui/core/styles';
+
 import AddIcon from '@material-ui/icons/NoteAdd';
 import DoneIcon from '@material-ui/icons/DoneAll';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -29,6 +31,11 @@ const styles = {
   flex: {
     flexGrow: 1,
   },
+	logoBox: {
+		color:'white',
+		display:'inline-flex',
+		verticalAlign:'middle'
+	},
   logo: {
     marginLeft: 	30,
     marginRight: 	0,
@@ -45,43 +52,34 @@ const styles = {
   },
 };
 
-function NavBar(props) {
-	const styleLabel = {
-		fontSize:		'14px',
-		fontWeight:	700,
-	};
-  const { 
-		classes, 
-		tabIndex,
-		onClickTab,
-	} = props;
-  return (
+const NavBar = (props) => {
+  const { classes, tabIndex, onClickTab, } = props;
+  
+	return (
 		<MuiThemeProvider theme={theme}>
-			<div className={classes.root}>
-				<AppBar position="static" elevation={8}>
-					<Toolbar>
-						<Grid container spacing={8}>
-							<Grid item xs={2}>
-								<span style={{color:'white',display:'inline-flex',verticalAlign:'middle'}}>
-									<img src="/logo.png" alt="" className={classes.logo} width="130" height="60" />
-								</span>
-							</Grid>
-							<Grid item xs={10}>
-								<div style={props.displayMe('registry')}>
-									<Tabs className={classes.tabs}
-										onChange={onClickTab}
-										value={tabIndex} centered
-									>
-										<Tab label="Доступные" />
-										<Tab label="Выданные" />
-										<Tab label="Справочники" />
-									</Tabs>
-								</div>
-							</Grid>
+			<AppBar position="static" elevation={8}>
+				<Toolbar>
+					<Grid container spacing={8}>
+						<Grid item xs={2}>
+							<span className={classes.logoBox}>
+								<img src="/logo.png" alt="" className={classes.logo} width="130" height="60" />
+							</span>
 						</Grid>
-					</Toolbar>
-				</AppBar>
-			</div>
+						<Grid item xs={10}>
+							<div style={props.displayMe('registry')}>
+								<Tabs className={classes.tabs}
+									onChange={onClickTab}
+									value={tabIndex} centered
+								>
+									<Tab label="Доступные" />
+									<Tab label="Выданные" />
+									<Tab label="Справочники" />
+								</Tabs>
+							</div>
+						</Grid>
+					</Grid>
+				</Toolbar>
+			</AppBar>
 		</MuiThemeProvider>
   );
 }
