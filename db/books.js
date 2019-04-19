@@ -6,47 +6,35 @@ module.exports = (pool, app) => {
 	
 	// get list
 	app.get('/books', (request, response) => {
-		const { authorId, userId } = request.query
+		const { authorId, userId, status } = request.query
+		let queryText = 'SELECT * FROM books'
+		let filterArr = []
+		let params = []
 		
 		if (authorId) {
-			pool.query('SELECT * FROM books WHERE authorId = $1 ORDER BY id ASC', 
-				[authorId], (error, results) => {
-					if (error) {
-						throw error
-					}
-					response.status(200).json(results.rows)
-				}
-			)
-		} else if (userId) {
-			if (userId === 'givenout') {
-				pool.query('SELECT * FROM books WHERE userId <> "" ORDER BY id ASC', 
-					(error, results) => {
-						if (error) {
-							throw error
-						}
-						response.status(200).json(results.rows)
-					}
-				)
-			} else {
-				pool.query('SELECT * FROM books WHERE userId = $1 ORDER BY id ASC', 
-					[userId], (error, results) => {
-						if (error) {
-							throw error
-						}
-						response.status(200).json(results.rows)
-					}
-				)
-			}
-		} else {
-			pool.query('SELECT * FROM books ORDER BY id ASC', 
-				(error, results) => {
-					if (error) {
-						throw error
-					}
-					response.status(200).json(results.rows)
-				}
-			)
+			params.push(authorId)
+			filterArr.push(`authorId = $${params.length}`)
 		}
+		if (userId) {
+			params.push(userId)
+			filterArr.push(`userId = $${params.length}`)
+		}
+		if (status === 'free') {
+			filterArr.push('available')
+		} else if (status === 'givenout') {
+			filterArr.push('NOT available')
+		}
+		
+		if (filterArr.length > 0) {
+			filterStr = filterArr.join(' AND ')
+			queryText += ` WHERE ${filterStr}`
+		}
+		queryText += ' ORDER BY name ASC'
+		
+		pool.query(queryText, params, (error, results) => {
+			if (error) throw error
+			response.status(200).json(results.rows)
+		})
 	})
 
 	// get item
@@ -64,17 +52,19 @@ module.exports = (pool, app) => {
 	// create
 	app.post('/books', (request, response) => {
 		getRequestBody(request, (body) => {
-			const { description, authorId } = body
+			const { description, authorId, authorName, name } = body
 			const id = uuidv4()
 			const timestamp = moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
 			
 			pool.query(
-				'INSERT INTO books (id, description, created, authorId) VALUES ($1, $2, $3, $4)', 
-				[id, description, timestamp, authorId], (error, results) => {
+				`INSERT INTO books 
+					(id, description, created, authorId, authorName, name, available) 
+					VALUES ($1, $2, $3, $4, $5, $6, $7)`, 
+				[id, description, timestamp, authorId, authorName, name, true], (error, results) => {
 				if (error) {
 					throw error
 				}
-				response.status(201).send(id)
+				response.status(201).json(id)
 			})
 		})
 	})
@@ -84,13 +74,15 @@ module.exports = (pool, app) => {
 		const id = request.params.id
 		
 		getRequestBody(request, (body) => {
-			const { userId } = body
-			
-			pool.query('UPDATE users SET userId = $1', [userId], (error, results) => {
+			const { userid, username, available } = body
+			console.log(userid, username, available)
+			pool.query(
+				'UPDATE books SET userid = $1, username = $2, available = $3 WHERE id = $4', 
+				[userid, username, available, id], (error, results) => {
 				if (error) {
 					throw error
 				}
-				response.status(200).send(id)	
+				response.status(200).json(id)	
 			})
 		})
 	})
@@ -103,7 +95,7 @@ module.exports = (pool, app) => {
 			if (error) {
 				throw error
 			}
-			response.status(200).send(id)
+			response.status(200).json(id)
 		})
 	})
 }

@@ -6,12 +6,10 @@ module.exports = (pool, app) => {
 	
 	// get list
 	app.get('/users', (request, response) => {
-		const queryText = 'SELECT * FROM users ORDER BY id ASC'
+		const queryText = 'SELECT * FROM users ORDER BY name ASC'
 		
 		pool.query(queryText, (error, results) => {
-			if (error) {
-				throw error
-			}
+			if (error) throw error
 			response.status(200).json(results.rows)
 		})
 	})
@@ -21,9 +19,7 @@ module.exports = (pool, app) => {
 		const id = request.params.id
 		
 		pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
-			if (error) {
-				throw error
-			}
+			if (error) throw error
 			response.status(200).json(results.rows)
 		})
 	})
@@ -38,10 +34,8 @@ module.exports = (pool, app) => {
 			pool.query(
 				'INSERT INTO users (id, name, email, phone, created) VALUES ($1, $2, $3, $4, $5)', 
 				[id, name, email, phone, timestamp], (error, results) => {
-				if (error) {
-					throw error
-				}
-				response.status(201).send(id)
+					if (error) throw error
+					response.status(200).json(id)
 			})
 		})
 	})

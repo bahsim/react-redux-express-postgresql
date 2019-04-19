@@ -35,11 +35,13 @@ module.exports = (app) => {
 		`CREATE TABLE IF NOT EXISTS
 			books(
 				id UUID PRIMARY KEY,
+				name TEXT NOT NULL,
 				authorId UUID NOT NULL,
 				authorName TEXT NOT NULL,
 				userId TEXT,
-				userName TEXT NOT NULL,
+				userName TEXT,
         description TEXT,
+				available BOOL,
 				created TIMESTAMP,
 				FOREIGN KEY (authorId) REFERENCES authors (id) ON DELETE CASCADE
 			)`;
