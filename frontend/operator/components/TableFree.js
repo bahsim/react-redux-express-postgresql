@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { withStyles } from '@material-ui/core/styles'
 
@@ -65,6 +66,13 @@ const TableFree = (props) => {
 			</Table>
 		</Paper>
 	)
+}
+
+TableFree.propTypes = {
+	classes				: PropTypes.object.isRequired, 
+	registry			: PropTypes.array.isRequired, 
+	onClickRecord	: PropTypes.func.isRequired, 
+	top						: PropTypes.number.isRequired,
 }
 
 export default withStyles(styles)(TableFree)

@@ -7,8 +7,8 @@ import NavBar from './NavBar'
 import FuncPanelRegistryFree from './FuncPanelRegistryFree'
 import FuncPanelRegistryGivenout from './FuncPanelRegistryGivenout'
 import FuncPanelCatalogs from './FuncPanelCatalogs'
-import RegistryFree from './RegistryFree'
-import RegistryGivenout from './RegistryGivenout'
+import TableFree from './TableFree'
+import TableGivenout from './TableGivenout'
 import Catalogs from './Catalogs'
 import Record from './Record'
 
@@ -48,10 +48,6 @@ class Main extends Component {
 			this.setState({ registryTop })
 		}
 	}
-	
-	displayMe = (value) => this.state.appMode === value ? {display:''} : {display:'none'}
-	
-	displayTab = (value) => this.state.tabIndex === value ? {display:''} : {display:'none'}
 	
 	onClickTab = (e, tabIndex) => {
 		let status = ''
@@ -175,44 +171,45 @@ class Main extends Component {
 					<NavBar 
 						onClickTab={this.onClickTab}
 						tabIndex={this.state.tabIndex}
-						displayMe={this.displayMe}
 					/>
 					
 					<br/>
 					
-					<div style={this.displayMe('registry')}>
-						<div style={this.displayTab(0)}>
+					{this.state.tabIndex === 0 && 
+						<div>
 							<FuncPanelRegistryFree
 								authors={authors}
 								filterAuthor={this.state.filterAuthor}
 								setFilterAuthor={this.setFilterAuthor}
 							/>
 							<div ref={(el) => this.registryFree = el }>
-								<RegistryFree
+								<TableFree
 									top={this.state.registryTop}
 									registry={registry} 
 									onClickRecord={this.onClickRecord} 									
 								/>
 							</div>
 						</div>
-						<div style={this.displayTab(1)}>
+					}
+					{this.state.tabIndex === 1 &&
+						<div>
 							<FuncPanelRegistryGivenout
 								users={users}
 								filterUser={this.state.filterUser}
 								setFilterUser={this.setFilterUser}
 							/>
 							<div ref={(el) => this.registryGivenout = el }>
-								<RegistryGivenout
+								<TableGivenout
 									top={this.state.registryTop}
 									registry={registry} 
 									onClickRecord={this.onClickRecord} 
 								/>
 							</div>
 						</div>
-						<div style={this.displayTab(2)}>
-							<Catalogs />
-						</div>
-					</div>
+					}
+					{this.state.tabIndex === 2 &&
+						<Catalogs />
+					}
 					
 					<Record
 						users={users}
@@ -231,17 +228,17 @@ class Main extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-	appHasErrored: 	state.appHasErrored,
-	appIsLoading: 	state.appIsLoading,
-	registry:				state.registry,
-	authors:				state.authors,
-	users:					state.users,
+	appHasErrored	: state.appHasErrored,
+	appIsLoading	: state.appIsLoading,
+	registry			:	state.registry,
+	authors				:	state.authors,
+	users					:	state.users,
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  preLoading: (url) => dispatch(preLoading(url)),
-  fetchRegistry: (url) => dispatch(fetchRegistry(url)),
-  fetchCheckBook: (params, callback) => dispatch(fetchCheckBook(params, callback)),
+  preLoading			: (url) => dispatch(preLoading(url)),
+  fetchRegistry		: (url) => dispatch(fetchRegistry(url)),
+  fetchCheckBook	: (params, callback) => dispatch(fetchCheckBook(params, callback)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

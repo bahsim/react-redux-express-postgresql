@@ -52,15 +52,15 @@ module.exports = (pool, app) => {
 	// create
 	app.post('/books', (request, response) => {
 		getRequestBody(request, (body) => {
-			const { description, authorId, authorName, name } = body
+			const { description, authorid, authorname, name } = body
 			const id = uuidv4()
 			const timestamp = moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
 			
 			pool.query(
 				`INSERT INTO books 
-					(id, description, created, authorId, authorName, name, available) 
+					(id, description, created, authorid, authorname, name, available) 
 					VALUES ($1, $2, $3, $4, $5, $6, $7)`, 
-				[id, description, timestamp, authorId, authorName, name, true], (error, results) => {
+				[id, description, timestamp, authorid, authorname, name, true], (error, results) => {
 				if (error) {
 					throw error
 				}
@@ -87,15 +87,15 @@ module.exports = (pool, app) => {
 		})
 	})
 	
-	// delete
-	app.delete('/books/:id', (request, response) => {
-		const id = request.params.id
+	// // delete
+	// app.delete('/books/:id', (request, response) => {
+		// const id = request.params.id
 
-		pool.query('DELETE FROM books WHERE id = $1', [id], (error, results) => {
-			if (error) {
-				throw error
-			}
-			response.status(200).json(id)
-		})
-	})
+		// pool.query('DELETE FROM books WHERE id = $1', [id], (error, results) => {
+			// if (error) {
+				// throw error
+			// }
+			// response.status(200).json(id)
+		// })
+	// })
 }

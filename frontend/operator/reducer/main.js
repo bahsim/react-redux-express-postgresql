@@ -45,3 +45,12 @@ export function users(state = [], action) {
 			return state;
 	}
 }
+
+export function books(state = [], action) {
+	switch (action.type) {
+		case types.BOOKS_PUT:
+			return action.value;
+		default:
+			return state;
+	}
+}

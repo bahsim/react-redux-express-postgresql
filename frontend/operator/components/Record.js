@@ -1,7 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Modal from 'react-modal'
 
-import { withStyles } from '@material-ui/core/styles'
+import { createMuiTheme, MuiThemeProvider, withStyles } from '@material-ui/core/styles'
 
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
@@ -14,6 +15,20 @@ import Button from '@material-ui/core/Button'
 import SaveIcon from '@material-ui/icons/CheckCircle'
 
 Modal.setAppElement('body')
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#0093e7',
+    },
+    secondary: {
+      main: '#fdff00',
+    },
+  },
+	typography: {
+		useNextVariants: true
+	},
+});
 
 const styles = {
 	formControl: {
@@ -42,100 +57,114 @@ const Record = (props) => {
 					users, currentUser, handleCheckBook, handleSelectUser } = props
 					
 	return (
-		<Modal
-			isOpen={modalIsOpen}
-			onRequestClose={closeModal}
-			style={modalStyle}
-		>
-			{tabIndex == 0 &&
-				<Typography variant="h5">
-					{'Выдача книги'}
-				</Typography>
-			}
-			{tabIndex == 1 &&
-				<Typography variant="h5">
-					{'Возврат книги'}
-				</Typography>
-			}
-			<br/>
-			<FormControl fullWidth className={classes.formControl}>
-				<TextField 
-					label={"Автор"}
-					value={currentRec.authorname}
-					InputLabelProps={{
-						shrink: true,
-					}}
-				/>
-			</FormControl>
-			<FormControl fullWidth className={classes.formControl}>
-				<TextField 
-					label={"Наименование"}
-					value={currentRec.name}
-					InputLabelProps={{
-						shrink: true,
-					}}
-				/>
-			</FormControl>
-			<FormControl fullWidth className={classes.formControl}>
-				<TextField 
-					label={"Описание"}
-					value={currentRec.description}
-					InputLabelProps={{
-						shrink: true,
-					}}
-				/>
-			</FormControl>
-			{tabIndex === 1 &&
+		<MuiThemeProvider theme={theme}>
+			<Modal
+				isOpen={modalIsOpen}
+				onRequestClose={closeModal}
+				style={modalStyle}
+			>
+				{tabIndex == 0 &&
+					<Typography variant="h5">
+						{'Выдача книги'}
+					</Typography>
+				}
+				{tabIndex == 1 &&
+					<Typography variant="h5">
+						{'Возврат книги'}
+					</Typography>
+				}
+				<br/>
 				<FormControl fullWidth className={classes.formControl}>
 					<TextField 
-						label={"Читатель"}
-						value={currentRec.username}
+						label={"Автор"}
+						value={currentRec.authorname}
 						InputLabelProps={{
 							shrink: true,
 						}}
 					/>
 				</FormControl>
-			}
-			{tabIndex === 0 &&
 				<FormControl fullWidth className={classes.formControl}>
-					<InputLabel htmlFor="record-status">
-						{"Читатель"}
-					</InputLabel>
-					<Select
-						value={currentUser}
-						onChange={handleSelectUser}
-						inputProps={{
-							name: 'author',
-							id: 'record-status',
+					<TextField 
+						label={"Наименование"}
+						value={currentRec.name}
+						InputLabelProps={{
+							shrink: true,
 						}}
-					>
-						{users.map((item) => (
-							<MenuItem 
-								key={item.id} 
-								value={item.id}
-							>
-								{item.name}
-							</MenuItem>
-						))}
-					</Select>
+					/>
 				</FormControl>
-			}
-			
-			<br/><br/>
-			
-			<Button mini variant="text" color="primary" onClick={handleCheckBook}>
-				<SaveIcon />
-				<span className={classes.label}>{'ОК'}</span>
-			</Button>
-			
-			&nbsp;&nbsp;&nbsp;
-			
-			<Button mini variant="text" color="primary" onClick={closeModal}>
-				<CancelIcon />
-				<span className={classes.label}>{'Отмена'}</span>
-			</Button>
-		</Modal>	
+				<FormControl fullWidth className={classes.formControl}>
+					<TextField 
+						label={"Описание"}
+						value={currentRec.description}
+						InputLabelProps={{
+							shrink: true,
+						}}
+					/>
+				</FormControl>
+				{tabIndex === 1 &&
+					<FormControl fullWidth className={classes.formControl}>
+						<TextField 
+							label={"Читатель"}
+							value={currentRec.username}
+							InputLabelProps={{
+								shrink: true,
+							}}
+						/>
+					</FormControl>
+				}
+				{tabIndex === 0 &&
+					<FormControl fullWidth className={classes.formControl}>
+						<InputLabel htmlFor="record-status">
+							{"Читатель"}
+						</InputLabel>
+						<Select
+							value={currentUser}
+							onChange={handleSelectUser}
+							inputProps={{
+								name: 'author',
+								id: 'record-status',
+							}}
+						>
+							{users.map((item) => (
+								<MenuItem 
+									key={item.id} 
+									value={item.id}
+								>
+									{item.name}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				}
+				
+				<br/><br/>
+				
+				<Button mini variant="text" color="primary" onClick={handleCheckBook}>
+					<SaveIcon />
+					<span className={classes.label}>{'ОК'}</span>
+				</Button>
+				
+				&nbsp;&nbsp;&nbsp;
+				
+				<Button mini variant="text" color="primary" onClick={closeModal}>
+					<CancelIcon />
+					<span className={classes.label}>{'Отмена'}</span>
+				</Button>
+			</Modal>	
+		</MuiThemeProvider>
 	)
+}
+
+Record.propTypes = {
+	classes						: PropTypes.object.isRequired, 
+	modalIsOpen				: PropTypes.bool.isRequired, 
+	closeModal				: PropTypes.func.isRequired, 
+	tabIndex					: PropTypes.number.isRequired, 
+	currentRec				: PropTypes.object.isRequired,
+	users							: PropTypes.array.isRequired, 
+	currentUser				: PropTypes.string.isRequired, 
+	handleCheckBook		: PropTypes.func.isRequired, 
+	handleSelectUser	: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(Record)

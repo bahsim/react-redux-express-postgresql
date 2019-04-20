@@ -12,8 +12,8 @@ import Grid from '@material-ui/core/Grid'
 
 const styles = theme => ({
   formControl: {
-    margin: theme.spacing.unit,
-    minWidth: '100%',
+    margin		: theme.spacing.unit,
+    minWidth	: '100%',
   },
 })
 
@@ -55,11 +55,14 @@ const FuncPanelRegistryFree = (props) => {
 				</Grid>
 			</Grid>
 		</Paper>
-  );
+  )
 }
 
 FuncPanelRegistryFree.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes					: PropTypes.object.isRequired,
+	filterAuthor		: PropTypes.string.isRequired, 
+	setFilterAuthor	: PropTypes.func.isRequired, 
+	authors					: PropTypes.array.isRequired,
 }
 
 export default withStyles(styles)(FuncPanelRegistryFree)

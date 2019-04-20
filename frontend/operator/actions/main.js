@@ -3,7 +3,7 @@ import store from '../store';
 import * as types from '../constants/ActionTypes'
 
 export function preLoading(urlRegistry) {
-	return (dispatch, getState) => {
+	return (dispatch) => {
 		setTimeout(() => {
 			dispatch(fetchAuthors('/authors'))
 			dispatch(fetchUsers('/users'))
@@ -13,7 +13,7 @@ export function preLoading(urlRegistry) {
 }
 
 export function fetchRegistry(url) {
-	return (dispatch, getState) => {
+	return (dispatch) => {
 		dispatch(appIsLoading(true));
 		
 		fetch(url)
@@ -34,8 +34,27 @@ export function fetchRegistry(url) {
 	}
 }
 
+export function fetchBooks(url) {
+	return (dispatch) => {
+		fetch(url)
+			.then((response) => {
+				if (!response.ok) {
+					throw Error(response.statusText);
+				}
+				return response;
+			})
+			.then((response) => response.json())
+			.then((value) => {
+				dispatch(putBooks(value))
+			})
+			.catch((error) => {
+				dispatch(appHasErrored(error))				
+			})
+	}
+}
+
 export function fetchAuthors(url) {
-	return (dispatch, getState) => {
+	return (dispatch) => {
 		fetch(url)
 			.then((response) => {
 				if (!response.ok) {
@@ -54,7 +73,7 @@ export function fetchAuthors(url) {
 }
 
 export function fetchUsers(url) {
-	return (dispatch, getState) => {
+	return (dispatch) => {
 		fetch(url)
 			.then((response) => {
 				if (!response.ok) {
@@ -73,7 +92,7 @@ export function fetchUsers(url) {
 }
 
 export function fetchCheckBook(params, callback) {
-	return (dispatch, getState) => {
+	return (dispatch) => {
 		const { bookid, userid, username, available } = params
 		const url = `/books/${bookid}`
 		const body = {userid, username, available}
@@ -81,6 +100,65 @@ export function fetchCheckBook(params, callback) {
 		dispatch(appIsLoading(true))
 		
 		fetch(url,{ method: 'PUT', body: JSON.stringify(body) })
+			.then((response) => {
+				if (!response.ok) {
+					throw Error(response.statusText);
+				}
+				return response;
+			})
+			.then((response) => response.json())
+			.then((value) => {
+				callback(value)
+			})
+			.catch((error) => {
+				dispatch(appHasErrored(error))
+			})
+	}
+}
+
+export function fetchNewAuthor(params, callback) {
+	return (dispatch) => {
+		fetch('/authors',{ method: 'POST', body: JSON.stringify(params) })
+			.then((response) => {
+				if (!response.ok) {
+					throw Error(response.statusText);
+				}
+				return response;
+			})
+			.then((response) => response.json())
+			.then((value) => {
+				callback(value)
+			})
+			.catch((error) => {
+				console.log(error)
+				dispatch(appHasErrored(error))
+			})
+	}
+}
+
+export function fetchNewUser(params, callback) {
+	return (dispatch) => {
+		fetch('/users',{ method: 'POST', body: JSON.stringify(params) })
+			.then((response) => {
+				if (!response.ok) {
+					throw Error(response.statusText);
+				}
+				return response;
+			})
+			.then((response) => response.json())
+			.then((value) => {
+				callback(value)
+			})
+			.catch((error) => {
+				console.log(error)
+				dispatch(appHasErrored(error))
+			})
+	}
+}
+
+export function fetchNewBook(params, callback) {
+	return (dispatch) => {
+		fetch('/books',{ method: 'POST', body: JSON.stringify(params) })
 			.then((response) => {
 				if (!response.ok) {
 					throw Error(response.statusText);
@@ -124,5 +202,11 @@ export function putAuthors(value) {
 export function putUsers(value) {
 	return {
 		type: types.USERS_PUT, value
+	}
+}
+
+export function putBooks(value) {
+	return {
+		type: types.BOOKS_PUT, value
 	}
 }

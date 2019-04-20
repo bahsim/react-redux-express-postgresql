@@ -1,17 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 
-import { createMuiTheme, MuiThemeProvider, withStyles } from '@material-ui/core/styles';
+import { createMuiTheme, MuiThemeProvider, withStyles } from '@material-ui/core/styles'
 
-import AddIcon from '@material-ui/icons/NoteAdd';
-import DoneIcon from '@material-ui/icons/DoneAll';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Unarchive from '@material-ui/icons/Unarchive';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import AddIcon from '@material-ui/icons/NoteAdd'
+import DoneIcon from '@material-ui/icons/DoneAll'
+import DeleteIcon from '@material-ui/icons/Delete'
+import Unarchive from '@material-ui/icons/Unarchive'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 
 const theme = createMuiTheme({
   palette: {
@@ -22,6 +23,9 @@ const theme = createMuiTheme({
       main: '#fdff00',
     },
   },
+	typography: {
+		useNextVariants: true
+	},
 });
 
 const styles = {
@@ -53,7 +57,7 @@ const styles = {
 };
 
 const NavBar = (props) => {
-  const { classes, tabIndex, onClickTab, } = props;
+  const { classes, tabIndex, onClickTab } = props
   
 	return (
 		<MuiThemeProvider theme={theme}>
@@ -66,22 +70,26 @@ const NavBar = (props) => {
 							</span>
 						</Grid>
 						<Grid item xs={10}>
-							<div style={props.displayMe('registry')}>
-								<Tabs className={classes.tabs}
-									onChange={onClickTab}
-									value={tabIndex} centered
-								>
-									<Tab label="Доступные" />
-									<Tab label="Выданные" />
-									<Tab label="Справочники" />
-								</Tabs>
-							</div>
+							<Tabs className={classes.tabs}
+								onChange={onClickTab}
+								value={tabIndex} centered
+							>
+								<Tab label="Доступные" />
+								<Tab label="Выданные" />
+								<Tab label="Справочники" />
+							</Tabs>
 						</Grid>
 					</Grid>
 				</Toolbar>
 			</AppBar>
 		</MuiThemeProvider>
-  );
+  )
 }
 
-export default withStyles(styles)(NavBar);
+NavBar.propTypes = {
+  classes			: PropTypes.object.isRequired,
+	tabIndex		: PropTypes.number.isRequired, 
+	onClickTab	: PropTypes.func.isRequired,
+}
+
+export default withStyles(styles)(NavBar)

@@ -54,7 +54,10 @@ const FuncPanelRegistryGivenout = (props) => {
 }
 
 FuncPanelRegistryGivenout.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes				: PropTypes.object.isRequired,
+	filterUser		: PropTypes.string.isRequired, 
+	setFilterUser	: PropTypes.func.isRequired, 
+	users					: PropTypes.array.isRequired,
 }
 
 export default withStyles(styles)(FuncPanelRegistryGivenout)
